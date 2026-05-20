@@ -326,16 +326,10 @@ ipcMain.handle('files:move', async (_event, { files, destination }) => {
     const filename = path.basename(filePath);
     const dest = path.join(destination, filename);
     try {
-      fs.renameSync(filePath, dest);
+      fs.copyFileSync(filePath, dest);
       results.push({ file: filename, success: true });
-    } catch {
-      try {
-        fs.copyFileSync(filePath, dest);
-        fs.unlinkSync(filePath);
-        results.push({ file: filename, success: true });
-      } catch (err) {
-        results.push({ file: filename, success: false, error: err.message });
-      }
+    } catch (err) {
+      results.push({ file: filename, success: false, error: err.message });
     }
   }
   return results;

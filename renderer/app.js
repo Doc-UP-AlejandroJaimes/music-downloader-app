@@ -308,17 +308,17 @@ async function moveSelected() {
   const moveBtn   = document.getElementById('moveBtn');
   const moveBtnLbl = document.getElementById('moveBtnLabel');
   moveBtn.disabled  = true;
-  moveBtnLbl.textContent = 'Moviendo…';
+  moveBtnLbl.textContent = 'Copiando…';
 
   try {
     const results = await window.electronAPI.moveFiles(selected, destination);
     const failed  = results.filter(r => !r.success);
 
     if (failed.length === 0) {
-      showMoveStatus(`✓ ${results.length} archivo${results.length !== 1 ? 's' : ''} movido${results.length !== 1 ? 's' : ''} correctamente.`, 'success');
+      showMoveStatus(`✓ ${results.length} archivo${results.length !== 1 ? 's' : ''} copiado${results.length !== 1 ? 's' : ''} correctamente.`, 'success');
     } else {
       showMoveStatus(
-        `${results.length - failed.length} movido(s). ${failed.length} error(es): ${failed.map(f => f.file).join(', ')}`,
+        `${results.length - failed.length} copiado(s). ${failed.length} error(es): ${failed.map(f => f.file).join(', ')}`,
         'error',
       );
     }
@@ -328,7 +328,7 @@ async function moveSelected() {
     showMoveStatus('Error al mover: ' + err.message, 'error');
   } finally {
     moveBtn.disabled = false;
-    moveBtnLbl.textContent = 'Mover a…';
+    moveBtnLbl.textContent = 'Copiar a…';
   }
 }
 
