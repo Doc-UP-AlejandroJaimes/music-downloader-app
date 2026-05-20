@@ -1,0 +1,20 @@
+{
+  "name": "appmusic",
+  "version": "1.0.0",
+  "description": "AppMusic - YouTube Music Downloader",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win",
+    "icon": "node assets/convert-icon.js",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "dependencies": {
+    "ffmpeg-static": "^5.2.0"
+  },
+  "devDependencies": {
+    "electron": "^28.3.3",
+    "electron-builder": "^24.13.3",
+    "png-to-ico": "^3.0.1"
+  }
+}
