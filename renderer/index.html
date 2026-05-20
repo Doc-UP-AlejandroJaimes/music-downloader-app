@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:;" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AppMusic</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ── Title Bar ─────────────────────────────────────────── -->
+  <div class="title-bar" id="titleBar">
+    <div class="title-bar-left">
+      <svg class="title-logo" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="10" stroke="#FF6B00" stroke-width="1.5"/>
+        <circle cx="12" cy="12" r="3" fill="#FF6B00"/>
+        <path d="M12 2 Q14 6 12 9" stroke="#FF6B00" stroke-width="1.2" fill="none"/>
+        <path d="M12 15 Q10 18 12 22" stroke="#FF6B00" stroke-width="1.2" fill="none"/>
+        <path d="M2 12 Q6 10 9 12" stroke="#FF6B00" stroke-width="1.2" fill="none"/>
+        <path d="M15 12 Q18 14 22 12" stroke="#FF6B00" stroke-width="1.2" fill="none"/>
+      </svg>
+      <span class="title-text">APP<span>MUSIC</span></span>
+    </div>
+    <div class="title-bar-controls">
+      <button class="wc-btn wc-min" id="btnMin" title="Minimizar">&#8211;</button>
+      <button class="wc-btn wc-max" id="btnMax" title="Maximizar">&#9633;</button>
+      <button class="wc-btn wc-close" id="btnClose" title="Cerrar">&#10005;</button>
+    </div>
+  </div>
+
+  <!-- ── Boot overlay ──────────────────────────────────────── -->
+  <div class="boot-overlay" id="bootOverlay">
+    <div class="boot-spinner"></div>
+    <p class="boot-msg" id="bootMsg">Iniciando AppMusic…</p>
+  </div>
+
+  <!-- ── Main layout ───────────────────────────────────────── -->
+  <div class="layout" id="mainLayout" style="display:none">
+
+    <!-- Sidebar / Tabs -->
+    <nav class="sidebar">
+      <button class="tab-btn active" data-tab="download">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Descargar</span>
+      </button>
+      <button class="tab-btn" data-tab="move">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M5 12l4-4M5 12l4 4M19 12l-4-4M19 12l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Mover canciones</span>
+      </button>
+      <button class="tab-btn" data-tab="history">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Historial</span>
+      </button>
+    </nav>
+
+    <!-- Content -->
+    <main class="content">
+
+      <!-- ══ TAB: DOWNLOAD ════════════════════════════════════ -->
+      <section class="tab-panel active" id="tab-download">
+        <h2 class="panel-title">Descargar música</h2>
+
+        <div class="input-row">
+          <input
+            type="text"
+            id="urlInput"
+            class="url-input"
+            placeholder="Pega aquí la URL de YouTube…"
+            spellcheck="false"
+          />
+          <button class="btn btn-secondary" id="previewBtn">Vista previa</button>
+        </div>
+
+        <!-- Preview card -->
+        <div class="preview-card" id="previewCard" style="display:none">
+          <img id="previewThumb" src="" alt="Miniatura" />
+          <div class="preview-info">
+            <p class="preview-title" id="previewTitle"></p>
+            <p class="preview-meta" id="previewMeta"></p>
+          </div>
+        </div>
+
+        <!-- Quality selector -->
+        <div class="quality-row">
+          <span class="quality-label">Calidad:</span>
+          <label class="radio-pill" id="qualityPill320">
+            <input type="radio" name="quality" value="320" checked />
+            <span>MP3 · 320 kbps</span>
+          </label>
+          <label class="radio-pill" id="qualityPill128">
+            <input type="radio" name="quality" value="128" />
+            <span>MP3 · 128 kbps</span>
+          </label>
+        </div>
+        <p class="quality-note" id="qualityNote" style="display:none"></p>
+
+        <!-- Download button -->
+        <button class="btn btn-primary" id="downloadBtn" disabled>
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Descargar
+        </button>
+
+        <!-- Progress -->
+        <div class="progress-wrap" id="progressWrap" style="display:none">
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progressFill"></div>
+          </div>
+          <p class="progress-label" id="progressLabel">0%</p>
+        </div>
+
+        <!-- Status message -->
+        <div class="status-msg" id="downloadStatus"></div>
+
+        <!-- Destination hint -->
+        <p class="dest-hint" id="destHint"></p>
+      </section>
+
+      <!-- ══ TAB: MOVE ════════════════════════════════════════ -->
+      <section class="tab-panel" id="tab-move">
+        <div class="panel-header">
+          <h2 class="panel-title">Mover canciones</h2>
+          <div class="panel-actions">
+            <button class="btn btn-ghost" id="refreshFilesBtn">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 0 0 4.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 0 1-15.357-2m15.357 2H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Actualizar
+            </button>
+            <button class="btn btn-ghost" id="selectAllBtn">Seleccionar todo</button>
+          </div>
+        </div>
+
+        <div class="file-list" id="fileList">
+          <p class="empty-msg">No se encontraron canciones en AppMusic/</p>
+        </div>
+
+        <div class="move-footer">
+          <span class="selected-count" id="selectedCount">0 seleccionadas</span>
+          <button class="btn btn-primary" id="moveBtn" disabled>
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span id="moveBtnLabel">Mover a…</span>
+          </button>
+        </div>
+
+        <div class="status-msg" id="moveStatus"></div>
+      </section>
+
+      <!-- ══ TAB: HISTORY ═════════════════════════════════════ -->
+      <section class="tab-panel" id="tab-history">
+        <div class="panel-header">
+          <h2 class="panel-title">Historial de descargas</h2>
+          <div class="panel-actions">
+            <button class="btn btn-ghost" id="refreshHistoryBtn">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 0 0 4.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 0 1-15.357-2m15.357 2H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Actualizar
+            </button>
+            <button class="btn btn-ghost btn-danger" id="clearHistoryBtn">Limpiar</button>
+          </div>
+        </div>
+
+        <div class="history-list" id="historyList">
+          <p class="empty-msg">Sin historial todavía.</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
