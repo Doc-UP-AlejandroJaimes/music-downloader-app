@@ -231,6 +231,13 @@
                         </div>
                     </div>
 
+                    <input
+                        class="search-input"
+                        id="searchFilesInput"
+                        placeholder="Buscar canción…"
+                        spellcheck="false"
+                    />
+
                     <div class="file-list" id="fileList">
                         <p class="empty-msg">
                             No hay canciones en la carpeta AppMusic/
@@ -241,6 +248,26 @@
                         <span class="selected-count" id="selectedCount"
                             >0 seleccionadas</span
                         >
+                        <button
+                            class="btn btn-ghost btn-danger"
+                            id="deleteBtn"
+                            disabled
+                        >
+                            <svg
+                                class="btn-icon"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                            >
+                                <path
+                                    d="M3 6h18M8 6V4h8v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                />
+                            </svg>
+                            Eliminar
+                        </button>
                         <button class="btn btn-primary" id="moveBtn" disabled>
                             <svg
                                 class="btn-icon"
@@ -290,6 +317,13 @@
                             </button>
                         </div>
                     </div>
+
+                    <input
+                        class="search-input"
+                        id="searchHistoryInput"
+                        placeholder="Buscar en historial…"
+                        spellcheck="false"
+                    />
 
                     <div class="history-list" id="historyList">
                         <p class="empty-msg">Sin historial todavía.</p>
