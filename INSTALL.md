@@ -17,7 +17,7 @@
 
 ## Instalación
 
-1. Descarga el archivo **[AppMusic Setup 1.0.0.exe](https://github.com/Doc-UP-AlejandroJaimes/music-downloader-app/releases/download/v1.0.0/AppMusic.Setup.1.0.0.exe)** desde la sección de releases.
+1. Descarga el archivo **[AppMusic Setup 1.1.0.exe](https://github.com/Doc-UP-AlejandroJaimes/music-downloader-app/releases/download/v1.1.0/AppMusic.Setup.1.1.0.exe)** desde la sección de releases.
 2. Haz doble clic en el instalador.
 3. Sigue los pasos del asistente — puedes elegir la carpeta de instalación.
 4. Al finalizar, el acceso directo de **AppMusic** aparecerá en tu escritorio.
