@@ -35,6 +35,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // Files
   listFiles: () => ipcRenderer.invoke('files:list'),
   moveFiles: (files, destination) => ipcRenderer.invoke('files:move', { files, destination }),
+  deleteFiles: (files) => ipcRenderer.invoke('files:delete', { files }),
   openFolderDialog: () => ipcRenderer.invoke('dialog:openFolder'),
 
   // History

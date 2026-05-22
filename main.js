@@ -336,6 +336,24 @@ ipcMain.handle('files:move', async (_event, { files, destination }) => {
 });
 
 // ---------------------------------------------------------------------------
+// IPC – files:delete
+// ---------------------------------------------------------------------------
+
+ipcMain.handle('files:delete', async (_event, { files }) => {
+  const results = [];
+  for (const filePath of files) {
+    const filename = path.basename(filePath);
+    try {
+      fs.unlinkSync(filePath);
+      results.push({ file: filename, success: true });
+    } catch (err) {
+      results.push({ file: filename, success: false, error: err.message });
+    }
+  }
+  return results;
+});
+
+// ---------------------------------------------------------------------------
 // IPC – dialog:openFolder
 // ---------------------------------------------------------------------------
 
