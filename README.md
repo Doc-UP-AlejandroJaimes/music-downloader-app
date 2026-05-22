@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/icon.png" width="100" alt="AppMusic" />
+</p>
+
 # AppMusic — YouTube Music Downloader
 
 Aplicación de escritorio Windows para descargar música de YouTube en MP3.
