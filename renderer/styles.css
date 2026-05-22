@@ -392,6 +392,24 @@ html, body {
 .radio-pill input { display: none; }
 .radio-pill span { font-size: 13px; font-weight: 600; letter-spacing: .3px; }
 
+.search-input {
+  width: 100%;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  padding: 9px 14px;
+  outline: none;
+  margin-bottom: 12px;
+}
+.search-input:focus {
+  border-color: var(--orange);
+  box-shadow: var(--glow-sm);
+}
+.search-input::placeholder { color: var(--text-3); }
+
 .quality-note {
   font-size: 12px;
   color: var(--text-3);

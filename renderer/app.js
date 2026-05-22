@@ -215,6 +215,8 @@ function hideDownloadStatus() {
 document.getElementById('refreshFilesBtn').addEventListener('click', loadFiles);
 document.getElementById('selectAllBtn').addEventListener('click', toggleSelectAll);
 document.getElementById('moveBtn').addEventListener('click', moveSelected);
+document.getElementById('deleteBtn').addEventListener('click', deleteSelected);
+document.getElementById('searchFilesInput').addEventListener('input', renderFiles);
 
 let allFiles = [];
 let allSelected = false;
@@ -231,15 +233,19 @@ async function loadFiles() {
 
 function renderFiles() {
   const container = document.getElementById('fileList');
+  const query = document.getElementById('searchFilesInput').value.trim().toLowerCase();
+  const filtered = query ? allFiles.filter(f => f.name.toLowerCase().includes(query)) : allFiles;
 
-  if (!allFiles.length) {
-    container.innerHTML = '<p class="empty-msg">No hay canciones en la carpeta AppMusic/</p>';
+  if (!filtered.length) {
+    container.innerHTML = query
+      ? '<p class="empty-msg">Sin resultados para esa búsqueda.</p>'
+      : '<p class="empty-msg">No hay canciones en la carpeta AppMusic/</p>';
     updateMoveBtn();
     return;
   }
 
   container.innerHTML = '';
-  allFiles.forEach((file) => {
+  filtered.forEach((file) => {
     const item = document.createElement('div');
     item.className = 'file-item';
     item.dataset.path = file.path;
@@ -294,6 +300,7 @@ function updateMoveBtn() {
   const checked = document.querySelectorAll('.file-checkbox:checked').length;
   document.getElementById('selectedCount').textContent = `${checked} seleccionada${checked !== 1 ? 's' : ''}`;
   document.getElementById('moveBtn').disabled = checked === 0;
+  document.getElementById('deleteBtn').disabled = checked === 0;
 }
 
 async function moveSelected() {
@@ -332,6 +339,36 @@ async function moveSelected() {
   }
 }
 
+async function deleteSelected() {
+  const selected = [...document.querySelectorAll('.file-item.selected')]
+    .map(item => item.dataset.path);
+
+  if (!selected.length) return;
+
+  const n = selected.length;
+  if (!confirm(`¿Eliminar ${n} archivo${n !== 1 ? 's' : ''}? Esta acción no se puede deshacer.`)) return;
+
+  const deleteBtn = document.getElementById('deleteBtn');
+  deleteBtn.disabled = true;
+
+  try {
+    const results = await window.electronAPI.deleteFiles(selected);
+    const failed = results.filter(r => !r.success);
+
+    if (failed.length === 0) {
+      showMoveStatus(`✓ ${results.length} archivo${results.length !== 1 ? 's' : ''} eliminado${results.length !== 1 ? 's' : ''}.`, 'success');
+    } else {
+      showMoveStatus(`${results.length - failed.length} eliminado(s). ${failed.length} error(es).`, 'error');
+    }
+
+    await loadFiles();
+  } catch (err) {
+    showMoveStatus('Error al eliminar: ' + err.message, 'error');
+  } finally {
+    deleteBtn.disabled = false;
+  }
+}
+
 function showMoveStatus(msg, type) {
   const el = document.getElementById('moveStatus');
   el.textContent = msg;
@@ -349,24 +386,36 @@ document.getElementById('clearHistoryBtn').addEventListener('click', async () =>
   await window.electronAPI.clearHistory();
   await loadHistory();
 });
+document.getElementById('searchHistoryInput').addEventListener('input', () => renderHistory(allHistory));
+
+let allHistory = [];
 
 async function loadHistory() {
   const container = document.getElementById('historyList');
   container.innerHTML = '<p class="empty-msg">Cargando…</p>';
 
   try {
-    const entries = await window.electronAPI.getHistory();
-
-    if (!entries.length) {
-      container.innerHTML = '<p class="empty-msg">Sin historial todavía.</p>';
-      return;
-    }
-
-    container.innerHTML = '';
-    entries.forEach((entry) => renderHistoryEntry(entry, container));
+    allHistory = await window.electronAPI.getHistory();
+    renderHistory(allHistory);
   } catch (err) {
     container.innerHTML = `<p class="empty-msg">Error: ${err.message}</p>`;
   }
+}
+
+function renderHistory(entries) {
+  const container = document.getElementById('historyList');
+  const query = document.getElementById('searchHistoryInput').value.trim().toLowerCase();
+  const filtered = query ? entries.filter(e => (e.title || '').toLowerCase().includes(query)) : entries;
+
+  if (!filtered.length) {
+    container.innerHTML = query
+      ? '<p class="empty-msg">Sin resultados para esa búsqueda.</p>'
+      : '<p class="empty-msg">Sin historial todavía.</p>';
+    return;
+  }
+
+  container.innerHTML = '';
+  filtered.forEach((entry) => renderHistoryEntry(entry, container));
 }
 
 function renderHistoryEntry(entry, container) {
