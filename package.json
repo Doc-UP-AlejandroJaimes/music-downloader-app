@@ -1,6 +1,6 @@
 {
   "name": "appmusic",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "AppMusic - YouTube Music Downloader",
   "main": "main.js",
   "scripts": {
